@@ -15,20 +15,22 @@
 
 	<div class="row">
 		<div class="ninecol">
-			<p>This tool allows you to validate an XML sample against different sets of business rules. </p>
+			<p>This tool allows you to validate an XML sample against different sets of business rules. The validator uses validation artifacts based on profileId and customizationId in the document.</p>
 
 			<form id="xmlSourceForm" action="#">
 
-				<label for="xsltSelect">Validation artifact:</label>
-				<select id="xsltSelect"></select>
+                <input type="hidden" name="xsltSelect" value="AUTODETECT" id="xsltSelect" />
 
-				<label for="xmlTextSource">Paste XML data:</label>
-                <p><small>Copy and paste the XML into the text input box.</small></p>
+				<!-- <label for="xsltSelect">Validation artifact:</label>
+				<select id="xsltSelect"></select> -->
+
+				<label for="xmlTextSource">XML data:</label>
 				<textarea id="xmlTextSource" rows="10" cols="100" style="width: 100%;"></textarea>
+                <p><small>Copy and paste the XML into the textarea before validating.</small></p>
 			</form>
 
 			<button id="readFileButton">Validate XML</button>
-			<button id="renderFileButton">Render XML as HTML</button>
+			<!-- <button id="renderFileButton">Render XML as HTML</button> -->
 
         </div>
         <div class="threecol last">
@@ -44,7 +46,9 @@
                         <p><a href="http://anskaffelser.no/e-handel/faktura/teknisk-informasjon">Technical information</a></p>
 
                         <h2>Files</h2>
-                        <p><a href="documentation/Documentation.rtf">Documentation</a></p>
+                        <p><a href="documentation/Documentation.rtf">Validator documentation</a></p>
+                        <p><a href="https://github.com/difi/vefa-validator-conf">Guides and validation rules (EHF)</a></p>
+                        <p><a href="https://github.com/difi/vefa-ehf-xslt">XSLTs for presentation (EHF)</a></p>
 
                         <h2>Services</h2>
                         <p><a href="/validate-ws">Web service</a></p>
@@ -75,7 +79,8 @@
 <script type="text/javascript">
 	$(document).ready(function(){
 		var wsUrl = '/validate-ws';
-		
+
+        /*
 		// Get available versions
 		$.ajax({
 			url: wsUrl,
@@ -138,12 +143,15 @@
 				($("#xsltSelect option:selected").attr("render") == "true")?$("#renderFileButton").show() : $("#renderFileButton").hide();
 		    });
 		    $('#xsltSelect').change();
-		}		
+		}
+		*/
 		
 		// Send XML to ws and prosess result
 		$("#readFileButton,#renderFileButton").click(function() {
 			var r = '';
-			
+
+            $('#xmlTextSource').val($('#xmlTextSource').val().trim());
+
 			if ($('#xmlTextSource').val() == '') {
 				r = '<div style="height: 20px;"></div>';
 				r += '<h2>No XML data</h2>';
@@ -161,11 +169,11 @@
 			$('#transformResult').html(r);
 
 			// Get result
-			var url = wsUrl + '/' + escape($('#xsltSelect :selected').val());
-			
-			if (url=='/validate-ws/AUTODETECT') {
+			// var url = wsUrl + '/' + escape($('#xsltSelect :selected').val());
+            var url = '/validate-ws/';
+            /* if (url=='/validate-ws/AUTODETECT') {
 				url = wsUrl + '/';
-			}			
+			} */
 
 			// Render button clicked...
 			if ($(this).attr("id") == "renderFileButton")
@@ -186,11 +194,11 @@
 			var rOuter = '<div style="height: 20px"></div>';
 			
 						
-			if ($('#xsltSelect :selected').val()=='AUTODETECT') {
+			// if ($('#xsltSelect :selected').val()=='AUTODETECT') {
 				rOuter += '<h2>' + $("#xsltSelect option[value$='" + $(xml).find('messages').attr('id') + "']").text() + '</h2>';
-			} else {
+			/*} else {
 				rOuter += '<h2>' + $('#xsltSelect :selected').text() + '</h2>';	
-			}
+			}*/
 						
 			var rInner = '';			
 
