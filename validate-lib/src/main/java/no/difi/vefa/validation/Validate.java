@@ -1,5 +1,6 @@
 package no.difi.vefa.validation;
 
+import java.nio.file.FileSystems;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
@@ -44,7 +45,7 @@ public class Validate {
 	/**
 	 * Path to properties file.
 	 */	
-	public String pathToPropertiesFile = "/etc/opt/VEFAvalidator/validator.properties";
+	public String pathToPropertiesFile;
 
 	/**
 	 * Should the current validation suppress warnings from output? Default false.
@@ -77,6 +78,26 @@ public class Validate {
 	 */	
 	private PropertiesFile propertiesFile;
 
+        
+        public Validate() {
+            //Initiate path to property file
+            String datadir;
+            String defaultDatadir = "/etc/opt/VEFAvalidator";
+            String defaultFilename = "validator.properties";
+            String customDatadir = System.getProperty("no.difi.vefa.validation.configuration.datadir");
+	    
+            if (customDatadir != null)
+                datadir = customDatadir;
+            else
+                datadir = defaultDatadir;
+            
+            String separator = FileSystems.getDefault().getSeparator();
+            if(!datadir.endsWith(separator))
+                datadir += separator;
+            
+            this.pathToPropertiesFile = datadir + defaultFilename;
+             
+        }
 	/**
 	 * Executes a rendering according to the given configuration,
 	 * adds messages to the message collection if any and 
