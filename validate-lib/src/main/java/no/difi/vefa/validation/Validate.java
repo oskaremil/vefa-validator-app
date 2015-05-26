@@ -247,17 +247,13 @@ public class Validate {
 	 * @throws Exception 
 	 */	
 	public PropertiesFile getPropertiesFile() throws Exception {
-		String VEFAvalidatorDataDir = System.getProperty("no.difi.vefa.validation.configuration.datadir");
-		
-		if (VEFAvalidatorDataDir != null) {
-			this.pathToPropertiesFile = VEFAvalidatorDataDir + "/validator.properties";
-		}
-		
 		PropertiesFile propFile = new PropertiesFile();
 		propFile.main(this.pathToPropertiesFile);
 		
-		if (VEFAvalidatorDataDir != null) {
-			propFile.dataDir = VEFAvalidatorDataDir; 
+                String customDatadir = System.getProperty("no.difi.vefa.validation.configuration.datadir");
+                
+		if (customDatadir != null) {
+			propFile.dataDir = customDatadir; 
 		}
 		
 		return propFile;
